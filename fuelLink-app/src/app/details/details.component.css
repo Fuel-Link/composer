@@ -1,15 +1,45 @@
+.table-fuel-movements {
+  width: 30%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table-fuel-movements th, 
+.table-fuel-movements td {
+  border: 1px solid var(--shadow-color); 
+  padding: 8px;
+  text-align: left;
+}
+
+.table-fuel-movements th {
+  background-color: var(--accent-color);
+  color: var(--primary-color); 
+  font-weight: bold;
+}
+
+.table-fuel-movements tbody tr:nth-child(even) {
+  background-color: #f2f2f2; 
+}
+
+.table-fuel-movements tbody tr:hover {
+  background-color: #ddd; 
+}
+
+
 .listing-photo {
     height: 600px;
     width: 50%;
     object-fit: cover;
     border-radius: 30px;
     float: right;
-  }
+    box-shadow: 0px 5px 25px var(black);
+    }
   
   .listing-heading {
     font-size: 48pt;
     font-weight: bold;
     margin-bottom: 15px;
+    color: coral;
   }
   
   .listing-location::before {

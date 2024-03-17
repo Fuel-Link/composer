@@ -10,9 +10,9 @@ import { VehicleInfo } from '../vehicle-info';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <article>
+    <article style="padding: 10%;">
       <img class="listing-photo" [src]="vehicle?.photo">
-      <section class="listing-description">
+      <section class="listing-description" >
         <h2 class="listing-heading">{{vehicle?.plate}}</h2>
         <p class="listing-location"> {{vehicle?.owner}},  {{vehicle?.fuel}}</p>
       </section>
@@ -20,14 +20,36 @@ import { VehicleInfo } from '../vehicle-info';
         <h2 class="section-heading">
         Vehicle Specifications:
         </h2>
+        <br>
         <ul>
           <li>
-            Fuel : {{vehicle?.fuel}}
+            <b> Fuel : </b> {{vehicle?.fuel}}
           </li>
           <li>
-            Responsible Employee :  {{vehicle?.owner}}
+           <b> Responsible Employee :  </b> {{vehicle?.owner}}
           </li>
         </ul>
+        <br>
+        <h2 class="section-heading">
+          Last Fuel Movements:
+        </h2>
+        <table class="table-fuel-movements">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Number of Liters</th>
+              <th>Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let movement of vehicle?.fuelMovements">
+              <td>{{ movement.timestamp }}</td>
+              <td>{{ movement.liters }}</td>
+              <td>{{ movement.totalPrice }}</td>
+            </tr>
+          </tbody>
+        </table>
+
       </section>
     </article>
       <!-- details works! {{vehicle?.plate}} -->
