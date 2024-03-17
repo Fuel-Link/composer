@@ -1,0 +1,23 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+:root {
+    --primary-color: #ca780d8f; /* Orange */
+    --secondary-color: #FFD700; /* Gold */
+    --accent-color: #f5daa8; /* Same as primary for accent */
+    --shadow-color: #ffdab985; /* PeachPuff for shadow */
+}
+
+
+button.primary {
+  padding: 10px;
+  border: solid 1px var(--primary-color);
+  background: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+}
