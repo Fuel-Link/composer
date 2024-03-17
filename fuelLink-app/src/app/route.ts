@@ -3,6 +3,7 @@ import { HomeComponent } from "./home/home.component";
 import { DetailsComponent } from "./details/details.component";
 import { LoginComponent } from "./login/login.component";
 import { SignUpComponent } from "./sign-up/sign-up.component";
+import { DashBoardComponent } from "./dash-board/dash-board.component";
 
 const routeConfig: Routes = [
     {
@@ -26,6 +27,12 @@ const routeConfig: Routes = [
         path: 'signUp',
         component: SignUpComponent,
         title: 'Sign Up Page'
+    }
+    ,
+    {
+        path: 'dashboard',
+        component: DashBoardComponent,
+        title: 'Dashboard Page'
     }
 ];
 

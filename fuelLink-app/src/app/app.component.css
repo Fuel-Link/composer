@@ -12,6 +12,10 @@
     height: auto; 
 }
 
+.brand-name{
+  background-color: rgba(237, 176, 136, 0.685);
+}
+
   .content {
     padding: var(--content-padding);
   }

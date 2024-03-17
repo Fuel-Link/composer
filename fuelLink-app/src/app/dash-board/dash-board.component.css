@@ -1,0 +1,55 @@
+.dashboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Align items to the top */
+  }
+  
+  .chart-container {
+    flex: 1;
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 10px;
+  }
+  
+  .right-chart {
+    order: 1; /* Display on the right */
+  }
+  
+  .left-chart {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .top-chart {
+    order: 1; /* Display on top */
+  }
+  
+  .bottom-chart {
+    order: 2; /* Display below */
+  }
+
+
+  .fuel-table {
+    flex: 1;
+    margin: 10px;
+  }
+  
+  .fuel-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .fuel-table th, .fuel-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .fuel-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .fuel-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
