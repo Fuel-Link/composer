@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HomeComponent } from './home/home.component';
 import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   standalone: true,
@@ -14,7 +15,7 @@ import { RouterModule } from '@angular/router';
       </section>
   </main>`,
   styleUrls: ['./app.component.css'],
-  imports:[HomeComponent, RouterModule]
+  imports:[HomeComponent, RouterModule, HttpClientModule]
 })
 export class AppComponent {
   title = 'FuelLink';
