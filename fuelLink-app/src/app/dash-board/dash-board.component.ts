@@ -71,7 +71,7 @@ export class DashBoardComponent implements OnInit{
 
     //this.createLineChart();
     this.createDonutChart();
-    this.createPointChart();
+    //this.createPointChart();
     this.createBarChart();
   }
 
