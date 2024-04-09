@@ -1,73 +1,69 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgModule, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-dash-board',
   standalone: true,
   imports: [CommonModule],
-  template: `
- <div class="dashboard">
-  
-      <div class="chart-container right-chart">
+  template: `<div class="dashboard">
+  <div class="chart-container right-chart">
+    <br>
+    <h1>Fuel Consumption Dashboard</h1>
+    <br>
+    <canvas id="lineChart"></canvas>
+    <br>
+
+    <div class="fuel-table">
+      <h3>Last Fuel Consumptions</h3>
       <br>
-      <h1> Fuel Consumption Dashboard </h1>
-      <br>
-        <canvas id="lineChart"></canvas>
-        <br>
- 
-        <div class="fuel-table">
-        <h3>Last Fuel Consumptions</h3>
-        <br>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Fuel</th>
-              <th>Employee Name</th>
-              <th>Total Value</th>
-              <th>Plate Car</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Diesel</td>
-              <td>John Doe</td>
-              <td>$100</td>
-              <td>AB-C1-23</td>
-            </tr>
-            <tr>
-              <td>Gasoline</td>
-              <td>Jane Smith</td>
-              <td>$80</td>
-              <td>XY-Z4-56</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      </div>
-
-      <div class="chart-container left-chart"> 
-        <div class="chart-container top-chart">
-          <canvas id="barChart"></canvas>
-        </div>
-
-        <div class="chart-container bottom-chart">
-          <canvas id="donutChart"></canvas>
-        </div>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Liters</th>
+            <th>User</th>
+            <th>Plate</th>
+            <th>Gas Pump</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let elem of fuelHistory;">
+            <td>{{ elem.liters }}</td>
+            <td>{{ elem.user_id }}</td>
+            <td>{{ elem.plate }}</td>
+            <td>{{ elem.gaspump_id }}</td>
+            <td>{{ elem.date }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  `,
+  </div>
+
+  <div class="chart-container left-chart">
+    <div class="chart-container top-chart">
+      <canvas id="barChart"></canvas>
+    </div>
+
+    <div class="chart-container bottom-chart">
+      <canvas id="donutChart"></canvas>
+    </div>
+  </div>
+</div>
+`,
   styleUrls: ['./dash-board.component.css']
 })
+
 export class DashBoardComponent implements OnInit{
   predictions: { ds: string, yhat: number }[] = [];
+  fuelHistory:{ liters:string, user_id:string, date:string, plate:string, gaspump_id:string}[]=[];
 
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.fetchPredictions();
+    this.fetchMovements();
 
     //this.createLineChart();
     this.createDonutChart();
@@ -88,6 +84,18 @@ export class DashBoardComponent implements OnInit{
     );
   }
 
+  fetchMovements() {
+    const url = 'http://localhost:3000/fuel-movements';
+    this.http.get<any>(url).subscribe(
+      (response) => {
+        this.fuelHistory = response.data;
+        //console.log(this.fuelHistory);
+      },
+      (error) => {
+        console.error('Error fetching Fuel Movements:', error);
+      }
+    );
+  }
   createLineChart() {
     const labels = this.predictions.map(prediction => prediction.ds);
     const data = this.predictions.map(prediction => prediction.yhat);
