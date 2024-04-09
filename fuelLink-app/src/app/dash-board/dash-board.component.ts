@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-dash-board',
@@ -61,24 +62,44 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./dash-board.component.css']
 })
 export class DashBoardComponent implements OnInit{
-  constructor() { }
+  predictions: { ds: string, yhat: number }[] = [];
+
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.createLineChart();
+    this.fetchPredictions();
+
+    //this.createLineChart();
     this.createDonutChart();
     this.createPointChart();
     this.createBarChart();
   }
 
+  fetchPredictions() {
+    const url = 'http://localhost:5000/predict?bucket=bucketName&measurement=measurementName&field=fieldName';
+    this.http.get<any>(url).subscribe(
+      (response) => {
+        this.predictions = response.predictions;
+        this.createLineChart();
+      },
+      (error) => {
+        console.error('Error fetching predictions:', error);
+      }
+    );
+  }
+
   createLineChart() {
+    const labels = this.predictions.map(prediction => prediction.ds);
+    const data = this.predictions.map(prediction => prediction.yhat);
+
     const ctx = document.getElementById('lineChart') as HTMLCanvasElement;
     new Chart(ctx, {
       type: 'line',
       data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: labels,
         datasets: [{
-          label: 'Fuel Consumption',
-          data: [65, 59, 80, 81, 56, 55, 40],
+          label: 'Fuel Price Prediction',
+          data: data,
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
           tension: 0.1
