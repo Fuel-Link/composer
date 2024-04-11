@@ -46,5 +46,9 @@ export class HomeComponent {
     );
   }
 
+  getAllByPlates(plate: string): VehicleInfo | undefined {
+    return this.vehicleList.find( vehicleList => vehicleList.plate === plate);
+  }
+
 }
  

@@ -5,10 +5,12 @@ export interface FuelMovement {
   }
   
   export interface VehicleInfo {
+    id: number,
     plate: string,
-    owner: string,
     fuel: string,
-    photo: string,
-    fuelMovements: FuelMovement[]
+    type: string,
+    model:string,
+    brand: string,
+    color: string
   }
   

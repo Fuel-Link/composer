@@ -2,7 +2,8 @@ import { Component, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { PlatesService } from '../plates.service';
-import { VehicleInfo } from '../vehicle-info';
+import { FuelMovement, VehicleInfo } from '../vehicle-info';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -11,10 +12,10 @@ import { VehicleInfo } from '../vehicle-info';
   imports: [CommonModule],
   template: `
     <article style="padding: 10%;">
-      <img class="listing-photo" [src]="vehicle?.photo">
+      <img class="listing-photo" src='/assets/van2.png'>
       <section class="listing-description" >
-        <h2 class="listing-heading">{{vehicle?.plate}}</h2>
-        <p class="listing-location"> {{vehicle?.owner}},  {{vehicle?.fuel}}</p>
+        <h2 class="listing-heading">{{vehicle[0]?.plate}}</h2>
+        <p class="listing-location"> {{vehicle[0]?.fuel}}</p>
       </section>
       <section>
         <h2 class="section-heading">
@@ -23,10 +24,19 @@ import { VehicleInfo } from '../vehicle-info';
         <br>
         <ul>
           <li>
-            <b> Fuel : </b> {{vehicle?.fuel}}
+            <b> Fuel : </b> {{vehicle[0]?.fuel}}
           </li>
+          <br>
           <li>
-           <b> Responsible Employee :  </b> {{vehicle?.owner}}
+            <b> Brand : </b> {{vehicle[0]?.brand}}
+          </li>
+          <br>
+          <li>
+            <b> Model : </b> {{vehicle[0]?.model}}
+          </li>
+          <br>
+          <li>
+            <b> Color : </b> {{vehicle[0]?.color}}
           </li>
         </ul>
         <br>
@@ -38,30 +48,80 @@ import { VehicleInfo } from '../vehicle-info';
             <tr>
               <th>Timestamp</th>
               <th>Number of Liters</th>
-              <th>Total Price</th>
+              <th>Gas Pump</th>
+              <th>Employee</th>
             </tr>
+            <tr *ngFor="let item of movements">
+              <td>{{item?.date}}</td>
+              <td>{{item?.liters}}</td>
+              <td>{{item?.gaspump_id}}</td>
+              <td>{{item?.user_id}}</td>
+            </tr> 
           </thead>
           <tbody>
-            <tr *ngFor="let movement of vehicle?.fuelMovements">
-              <td>{{ movement.timestamp }}</td>
-              <td>{{ movement.liters }}</td>
-              <td>{{ movement.totalPrice }}</td>
-            </tr>
           </tbody>
         </table>
 
       </section>
     </article>
-      <!-- details works! {{vehicle?.plate}} -->
   `,
   styleUrls: ['./details.component.css']
 })
 export class DetailsComponent {
   route: ActivatedRoute = inject(ActivatedRoute);
   platesService = inject(PlatesService)
-  vehicle: VehicleInfo | undefined;
-  constructor(){
+  vehicle: any;
+  movements:any[]=[];
+
+  constructor(private http: HttpClient){
    const plateNumb = this.route.snapshot.params['plate'];
-   this.vehicle = this.platesService.getAllByPlates(plateNumb);
+   this.loadInfo(plateNumb);
+   this.loadMovements(plateNumb);
   }
+
+  loadInfo(plate: string){
+    
+    this.http.get<any>('http://localhost:3000/vehicle-info/plate?plate='+ plate).subscribe((response) => {
+      console.log("Response from server:", response); 
+      if (Array.isArray(response) && response.length > 0) {
+        this.vehicle = response.map((item: any) => ({
+          id: item.id,
+          plate: item.plate,
+          fuel: item.fuel,
+          type: item.type,
+          model: item.model,
+          brand: item.brand,
+          color: item.color
+        }));
+
+        console.log(this.vehicle);
+      } else {
+        console.error("Unexpected response structure:", response);
+      }
+    }, (error) => {
+      console.error("Error from server:", error);
+    });
+    
+    
+  }
+
+  loadMovements(plate: string){
+    this.http.get<any>('http://localhost:3000/fuel-movements/plate?plate='+ plate)
+      .subscribe(
+        (response) => {
+          console.log("DATA", response);   
+          // Assuming response is an array of objects
+          for (const item of response) {
+            this.movements.push(item);
+          }
+          console.log("MOVEMENTS", this.movements);   
+        },
+        (error) => {
+          console.error('Error fetching movements:', error);
+        }
+      );    
+  }
+  
+  
+
 }
