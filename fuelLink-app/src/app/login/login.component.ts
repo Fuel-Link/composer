@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { PlatesService } from '../plates.service';
-import { AuthService } from '../auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { KeycloakOperationService } from '../services/keycloak.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +18,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
           <!-- Display the content here -->
           <p>{{ content }}</p>
         </div>
-        <form [formGroup]="applyForm" (submit)="login()">
+        <form [formGroup]="applyForm">
           <label for="email">Email</label>
           <input id="email" type="email" formControlName="email">
 
@@ -35,18 +35,28 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  userProfile: any | null = null;
   content: any;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
+    private keyCloakService: KeycloakOperationService,
     private formBuilder: FormBuilder,
     private http: HttpClient
-  ) { }
+    ) { }
   
 
   ngOnInit() {
     this.fetchContent();
+    this.keyCloakService.getUserProfile().then((data: any) => {
+      this.userProfile = data;
+      console.table(this.userProfile);
+    });
+  }
+
+ 
+
+  logout() {
+    this.keyCloakService.logout();
   }
 
   fetchContent() {
@@ -67,24 +77,4 @@ export class LoginComponent implements OnInit {
     password: ['', Validators.required]
   });
 
-  login() {
-    if (this.applyForm.invalid) {
-      return;
-    }
-
-    this.authService.login(this.applyForm.value.email, this.applyForm.value.password)
-      .subscribe(
-        (data) => {
-          // Handle successful login response here
-          console.log(data);
-          // Redirect to another page upon successful login
-          this.router.navigate(['/vehicles']);
-        },
-        (error) => {
-          // Handle login error here
-          console.error('Login error:', error);
-          // You can display an error message to the user here
-        }
-      );
-  }
 }
