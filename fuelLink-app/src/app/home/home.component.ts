@@ -34,7 +34,7 @@ export class HomeComponent {
   }
 
   fetchVehicles() {
-    const url = 'http://localhost:3000/vehicle-info';
+    const url = 'http://localhost:4200/vehicle-info';
     this.http.get<any>(url).subscribe(
       (response) => {
         this.vehicleList = response.data;

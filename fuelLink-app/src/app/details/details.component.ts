@@ -81,7 +81,7 @@ export class DetailsComponent {
 
   loadInfo(plate: string){
     
-    this.http.get<any>('http://localhost:3000/vehicle-info/plate?plate='+ plate).subscribe((response) => {
+    this.http.get<any>('http://localhost:4200/vehicle-info/plate?plate='+ plate).subscribe((response) => {
       console.log("Response from server:", response); 
       if (Array.isArray(response) && response.length > 0) {
         this.vehicle = response.map((item: any) => ({
@@ -106,7 +106,7 @@ export class DetailsComponent {
   }
 
   loadMovements(plate: string){
-    this.http.get<any>('http://localhost:3000/fuel-movements/plate?plate='+ plate)
+    this.http.get<any>('http://localhost:4200/fuel-movements/plate?plate='+ plate)
       .subscribe(
         (response) => {
           console.log("DATA", response);   

@@ -85,7 +85,7 @@ export class DashBoardComponent implements OnInit{
   }
 
   fetchMovements() {
-    const url = 'http://localhost:3000/fuel-movements';
+    const url = 'http://localhost:4200/fuel-movements';
     this.http.get<any>(url).subscribe(
       (response) => {
         this.fuelHistory = response.data;
