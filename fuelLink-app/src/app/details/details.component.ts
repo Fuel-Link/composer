@@ -55,7 +55,7 @@ import { HttpClient } from '@angular/common/http';
               <td>{{item?.date}}</td>
               <td>{{item?.liters}}</td>
               <td>{{item?.gaspump_id}}</td>
-              <td>{{item?.user_id}}</td>
+              <td>{{item?.username}}</td>
             </tr> 
           </thead>
           <tbody>
@@ -114,12 +114,40 @@ export class DetailsComponent {
           for (const item of response) {
             this.movements.push(item);
           }
+          for(let elem of this.movements){
+            this.fetchUserName(elem.user_id).then((username: string) => {
+              elem.username = username; 
+            });
+          }
           console.log("MOVEMENTS", this.movements);   
         },
         (error) => {
           console.error('Error fetching movements:', error);
         }
       );    
+  }
+  
+  
+  fetchUserName(id: string): Promise<string> {
+    const url = 'http://localhost:4200/users/id?id=' + id;
+    return new Promise((resolve, reject) => {
+      this.http.get<any>(url).subscribe(
+        (response) => {
+          console.log('Response data:', response); // Print response.data
+          if (response && Array.isArray(response) && response.length > 0) {
+            const username = response[0].username;
+            resolve(username);
+          } else {
+            console.error('No data found or data is not an array or empty.');
+            reject('No data found or data is not an array or empty.');
+          }
+        },
+        (error) => {
+          console.error('Error fetching Username:', error);
+          reject(error);
+        }
+      );
+    });
   }
   
   

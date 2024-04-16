@@ -31,7 +31,7 @@ import { HttpClient } from '@angular/common/http';
         <tbody>
           <tr *ngFor="let elem of fuelHistory;">
             <td>{{ elem.liters }}</td>
-            <td>{{ elem.user_id }}</td>
+            <td>{{ elem.username}}</td>
             <td>{{ elem.plate }}</td>
             <td>{{ elem.gaspump_id }}</td>
             <td>{{ elem.date }}</td>
@@ -57,12 +57,12 @@ import { HttpClient } from '@angular/common/http';
 
 export class DashBoardComponent implements OnInit{
   predictions: { ds: string, yhat: number }[] = [];
-  fuelHistory:{ liters:string, user_id:string, date:string, plate:string, gaspump_id:string}[]=[];
-
+  fuelHistory:{ liters:string, user_id:string, date:string, plate:string, gaspump_id:string, username:string}[]=[];
+  user:{ user_id: string; username: string; role: string; hash: string}[]=[];
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.fetchPredictions();
+    // this.fetchPredictions();
     this.fetchMovements();
 
     //this.createLineChart();
@@ -84,18 +84,49 @@ export class DashBoardComponent implements OnInit{
     );
   }
 
+  
   fetchMovements() {
     const url = 'http://localhost:4200/fuel-movements';
     this.http.get<any>(url).subscribe(
       (response) => {
         this.fuelHistory = response.data;
-        //console.log(this.fuelHistory);
+        for(let elem of this.fuelHistory){
+          this.fetchUserName(elem.user_id).then((username: string) => {
+            elem.username = username; 
+          });
+        }
       },
       (error) => {
         console.error('Error fetching Fuel Movements:', error);
       }
     );
   }
+  
+  fetchUserName(id: string): Promise<string> {
+    const url = 'http://localhost:4200/users/id?id=' + id;
+    return new Promise((resolve, reject) => {
+      this.http.get<any>(url).subscribe(
+        (response) => {
+          console.log('Response data:', response); // Print response.data
+          if (response && Array.isArray(response) && response.length > 0) {
+            const username = response[0].username;
+            resolve(username);
+          } else {
+            console.error('No data found or data is not an array or empty.');
+            reject('No data found or data is not an array or empty.');
+          }
+        },
+        (error) => {
+          console.error('Error fetching Username:', error);
+          reject(error);
+        }
+      );
+    });
+  }
+  
+  
+  
+  
   createLineChart() {
     const labels = this.predictions.map(prediction => prediction.ds);
     const data = this.predictions.map(prediction => prediction.yhat);
