@@ -53,3 +53,30 @@
     background-color: #f2f2f2;
   }
   
+
+
+
+  .pump-table {
+    flex: 1;
+    margin: 10px;
+  }
+  
+  .pump-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .pump-table th, .pump-table td {
+    border: 1px solid #e69b1b;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .pump-table th {
+    background-color: #e69b1b;
+  }
+  
+  .pump-table tr:nth-child(even) {
+    background-color: #f3d592;
+  }
+  

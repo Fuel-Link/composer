@@ -15,6 +15,25 @@ import { HttpClient } from '@angular/common/http';
     <canvas id="lineChart"></canvas>
     <br>
 
+    <div class="pump-table">
+      <h3>Pump Movements</h3>
+      <br>
+      <table>
+        <thead>
+          <tr>
+            <th>Plate</th>
+            <th>Gas Pump</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let elem of pumpHistory;">
+            <td>{{ elem.plate }}</td>
+            <td>{{ elem.thingId}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="fuel-table">
       <h3>Last Fuel Consumptions</h3>
       <br>
@@ -59,12 +78,15 @@ export class DashBoardComponent implements OnInit{
   predictions: { ds: string, yhat: number }[] = [];
   fuelHistory:{ liters:string, user_id:string, date:string, plate:string, gaspump_id:string, username:string}[]=[];
   user:{ user_id: string; username: string; role: string; hash: string}[]=[];
+  pumpHistory:{ id:string, plate:string, thingId:string}[]=[];
+
   constructor(private http: HttpClient) { }
 
-  ngOnInit(): void {
-    // this.fetchPredictions();
-    this.fetchMovements();
 
+  ngOnInit(): void {
+    this.fetchPredictions();
+    this.fetchMovements();
+    this.fetchPump();
     //this.createLineChart();
     this.createDonutChart();
     //this.createPointChart();
@@ -84,7 +106,21 @@ export class DashBoardComponent implements OnInit{
     );
   }
 
-  
+    
+  fetchPump() {
+    const url = 'http://localhost:4200/kafka-communication';
+    this.http.get<any>(url).subscribe(
+      (response) => {
+        console.log("HEYY " + JSON.stringify(response));
+
+        this.pumpHistory = response;
+      },
+      (error) => {
+        console.error('Error fetching Pump Movements:', error);
+      }
+    );
+  }
+
   fetchMovements() {
     const url = 'http://localhost:4200/fuel-movements';
     this.http.get<any>(url).subscribe(

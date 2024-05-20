@@ -1,0 +1,4 @@
+
+influxDB/data/influxd.bolt
+*.tsm
+*.tsm
