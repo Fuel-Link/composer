@@ -10,6 +10,8 @@ import { CommonModule } from '@angular/common';
   template: `<main>
   <header class="brand-name">
     <img class="brand-logo" src="/assets/logo.svg" alt="logo" aria-hidden="true">
+    <h2>{{this.pageTitle}}</h2>
+
     <div class="menu">
       <button class="menu-button" (click)="toggleDropdown()">Menu</button>
       <div class="dropdown-content" [class.show]="dropdownVisible">
@@ -30,10 +32,12 @@ export class AppComponent implements OnInit {
   title = 'FuelLink';
   dropdownVisible = false;
   currentRoute: string;
+  pageTitle:string;
   menuOptions: { name: string, path: string }[];
 
   constructor(private router: Router) {
     this.currentRoute = '';
+    this.pageTitle = '';
     this.menuOptions = [];
   }
 
@@ -53,11 +57,19 @@ export class AppComponent implements OnInit {
   updateMenuOptions() {
     const allOptions = [
       { name: 'Dashboard', path: '/dashboard' },
-      { name: 'Gas Pump Management', path: '/gas-pump-management' },
+      { name: 'Gas Pump Management', path: '/gaspumpDash' },
       { name: 'Fleet Management', path: '/' }
     ];
 
     this.menuOptions = allOptions.filter(option => option.path !== this.currentRoute);
-  }
+
+    const currentOption = allOptions.find(option => option.path === this.currentRoute);
+
+    if (currentOption) {
+        this.pageTitle = currentOption.name;
+    } else {
+        this.pageTitle = ''; 
+    }
+}
 
 }

@@ -5,6 +5,7 @@ import { LoginComponent } from "./login/login.component";
 import { SignUpComponent } from "./sign-up/sign-up.component";
 import { DashBoardComponent } from "./dash-board/dash-board.component";
 import { AuthGuard } from "./guard/auth.guard";
+import { GaspumDashComponent } from "./gaspum-dash/gaspum-dash.component";
 
 const routeConfig: Routes = [
     {
@@ -29,6 +30,12 @@ const routeConfig: Routes = [
         path: 'dashboard',
         component: DashBoardComponent,
         title: 'Dashboard Page'
+    }
+    ,
+    {
+        path: 'gaspumpDash',
+        component: GaspumDashComponent,
+        title: 'Gas Pump Dashboard Page'
     }
 ];
 
