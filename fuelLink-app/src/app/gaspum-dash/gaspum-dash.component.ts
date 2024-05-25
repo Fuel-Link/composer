@@ -15,11 +15,13 @@ const EXCEL_EXTENSION = '.xlsx';
     <div class="dashboard">
       <div class="dashboard-content">
         <div class="chart-container">
-          <h3>Gas Pump 1 Stock</h3>
+          <h2 class="heading1" >Gas Pump Diesel Stock</h2>
+          <br>
           <canvas id="donutChart"></canvas>
         </div>
         <div class="alerts">
           <h3>Gas Pump Alerts</h3>
+          <br>
           <div *ngFor="let alert of alerts2" class="alert" [ngStyle]="{'background-color': alert.color}">
             {{ alert.message }}
           </div>
@@ -34,12 +36,16 @@ const EXCEL_EXTENSION = '.xlsx';
               <tr>
                 <th>Plate</th>
                 <th>Gas Pump</th>
+                <th>User</th>
+                <th>Authorization</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let elem of pumpHistory;">
                 <td>{{ elem.plate }}</td>
                 <td>{{ elem.thingId}}</td>
+                <td> Alice </td>
+                <td> Authorized </td>
               </tr>
             </tbody>
           </table>
@@ -47,6 +53,7 @@ const EXCEL_EXTENSION = '.xlsx';
         </div>
         <div class="alerts">
           <h3 class="heading"  >Fuel Movements Alerts</h3>
+          <br>
           <div *ngFor="let alert of alerts" class="alert" [ngStyle]="{'background-color': alert.color}">
             {{ alert.message }}
           </div>
@@ -70,7 +77,7 @@ const EXCEL_EXTENSION = '.xlsx';
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let elem of fuelHistory;let i = index" [ngClass]="{'excessive-consumption': excessiveIndices.includes(i)}">
+                <tr #fuelHistoryRow *ngFor="let elem of fuelHistory;let i = index">
                   <td>{{ elem.liters }}</td>
                   <td>{{ elem.username}}</td>
                   <td>{{ elem.plate }}</td>
@@ -82,7 +89,8 @@ const EXCEL_EXTENSION = '.xlsx';
         </div>
         </div>
       </div>
-      </div>      
+      </div>   
+
   `,
   imports: [
     CommonModule 
@@ -92,8 +100,11 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class GaspumDashComponent implements OnInit {
   pumpHistory:{ id:string, plate:string, thingId:string}[]=[];
-  fuelHistory:{ liters:string, user_id:string, date:string, plate:string, gaspump_id:string, username:string}[]=[];
+  fuelHistory:{
+    isExcessive: boolean; liters:string, user_id:string, date:string, plate:string, gaspump_id:string, username:string
+}[]=[];
   excessiveIndices: number[] = [];
+  fuelHistoryTable: any;
 
   // Alerts
   public alerts: any[] = [
@@ -133,6 +144,8 @@ export class GaspumDashComponent implements OnInit {
     });
   }
 
+  
+
     calculateAverageLiters(): number {
       console.log('All fuel History:', this.fuelHistory);
 
@@ -154,7 +167,7 @@ export class GaspumDashComponent implements OnInit {
 
     async highlightExcessiveConsumption() {
       const average = this.calculateAverageLiters();
-      const excessiveIndices = [];
+      const excessiveIndices: number[] = [];
       for (const [index, elem] of this.fuelHistory.entries()) {
         if (parseFloat(elem.liters) > average + 5) {
           // Ensure we have the correct value of user_id
@@ -176,7 +189,14 @@ export class GaspumDashComponent implements OnInit {
         }
       }
       this.excessiveIndices = excessiveIndices;
-      console.log('Excessive Indices:', this.excessiveIndices);
+
+      this.fuelHistory.forEach((elem, index) => {
+        elem.isExcessive = excessiveIndices.includes(index);
+        console.log('Excessive Indices:', excessiveIndices.includes(index));
+      });
+    
+
+     
     }
     
       

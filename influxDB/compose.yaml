@@ -1,0 +1,13 @@
+name: composer
+services:
+  angular:
+    build: .
+    ports:
+      - 4200:4200
+  influxdb:
+    image: influxdb:2
+    ports:
+      - 8086:8086
+    volumes:
+      - ./influxDB/data:/var/lib/influxdb2
+      - ./influxDB/config:/etc/influxdb2

@@ -92,22 +92,22 @@
 }
 
 .pump-table th, .pump-table td {
-  border: 1px solid #e69b1b;
+  border: 1px solid #e6731bc7;
   padding: 8px;
   text-align: left;
 }
 
 .pump-table th {
-  background-color: #e69b1b;
+  background-color: #e6731bc7;
 }
 
 .pump-table tr:nth-child(even) {
-  background-color: #f3d592;
+  background-color: #e6731b4e;
 }
 
 
 .download-button {
-  background-color: #ff7f00;
+  background-color: #ff800092;
   border: none;
   color: black;
   padding: 10px 20px;
@@ -122,13 +122,23 @@
 }
 
 .download-button:hover {
-  background-color: #ff9933;
+  background-color: #e6731bc7;
+}
+
+.heading1 {
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+
 }
 
 .heading {
   font-family: 'Montserrat', sans-serif;
 }
 
-.excessive-consumption {
+table tbody tr[isExcessive] {
   background-color: #ffcccc;
+  font-weight: bold;              
+  &[isExcessive] {
+    background-color: #ff0000; 
+  }
 }
