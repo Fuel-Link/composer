@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
   imports: [CommonModule],
   template: `
     <article style="padding: 10%;">
-      <img class="listing-photo" src='/assets/van2.png'>
+      <img class="listing-photo" src='/assets/{{vehicle[0]?.image}}'>
       <section class="listing-description" >
         <h2 class="listing-heading">{{vehicle[0]?.plate}}</h2>
         <p class="listing-location"> {{vehicle[0]?.fuel}}</p>

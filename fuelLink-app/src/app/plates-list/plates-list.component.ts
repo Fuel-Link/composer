@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   template: `
     <section class="listing">
-      <img class="listing-photo" [src]="randomImageSrc" alt="Fuel is {{vehicleInfo.fuel}}">
+      <img class="listing-photo" src="/assets/{{vehicleInfo.image}}" alt="Fuel is {{vehicleInfo.fuel}}">
       <h2 class="listing-heading">{{vehicleInfo.plate}}</h2>
       <p class="listing-location">{{vehicleInfo.fuel}}</p>
       <a [routerLink]="['/details', vehicleInfo.plate]">Learn More</a>

@@ -11,6 +11,7 @@ export interface FuelMovement {
     type: string,
     model:string,
     brand: string,
-    color: string
+    color: string,
+    image:string
   }
   
