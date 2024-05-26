@@ -4,7 +4,7 @@ export function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
       config: {
-        url: 'grupo1-egs-deti.ua.pt/keycloak',
+        url: ' http://grupo1-egs-deti.ua.pt/keycloak',
         realm: 'Fuel-Link',
         clientId: 'api'
       },

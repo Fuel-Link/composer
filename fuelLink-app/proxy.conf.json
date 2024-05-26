@@ -1,6 +1,6 @@
 {
     "/api": {
-      "target": "grupo1-egs-deti.ua.pt/keycloak",
+      "target": "http://grupo1-egs-deti.ua.pt/keycloack",
       "secure": false,
       "changeOrigin": true
     }
