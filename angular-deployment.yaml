@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: composer-angular
+  name: composer-angular
+  namespace: egs-fuellink
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: composer-angular
+  template:
+    metadata:
+      labels:
+        io.kompose.network/composer-default: "true"
+        io.kompose.service: composer-angular
+    spec:
+      containers:
+        - image: registry.deti/egs-fuellink/composer-angular
+          imagePullPolicy: Always
+          name: composer-angular
+          ports:
+            - containerPort: 4200
+              hostPort: 4200
+              protocol: TCP
+      restartPolicy: Always

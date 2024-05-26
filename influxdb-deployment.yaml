@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    io.kompose.service: composer-influxdb
+  name: composer-influxdb
+  namespace: egs-fuellink
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: composer-influxdb
+  serviceName: "composer-influxdb"
+  template:
+    metadata:
+      labels:
+        io.kompose.network/composer-default: "true"
+        io.kompose.service: composer-influxdb
+    spec:
+      containers:
+        - image: influxdb:2
+          name: influxdb
+          ports:
+            - containerPort: 8086
+              hostPort: 8086
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/influxdb2
+              name: composer-influxdb-claim0
+            - mountPath: /etc/influxdb2
+              name: composer-influxdb-claim1
+      restartPolicy: Always
+  volumeClaimTemplates:
+  - metadata:
+      name: composer-influxdb-claim0
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: composer-influxdb-claim1
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

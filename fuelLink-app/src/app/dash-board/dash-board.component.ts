@@ -108,7 +108,7 @@ export class DashBoardComponent implements OnInit{
 
     
   fetchPump() {
-    const url = 'http://localhost:4200/kafka-communication';
+    const url = 'http://app:4200/kafka-communication';
     this.http.get<any>(url).subscribe(
       (response) => {
         console.log("HEYY " + JSON.stringify(response));
@@ -122,7 +122,7 @@ export class DashBoardComponent implements OnInit{
   }
 
   fetchMovements() {
-    const url = 'http://localhost:4200/fuel-movements';
+    const url = 'http://app:4200/fuel-movements';
     this.http.get<any>(url).subscribe(
       (response) => {
         this.fuelHistory = response.data;
@@ -139,7 +139,7 @@ export class DashBoardComponent implements OnInit{
   }
   
   fetchUserName(id: string): Promise<string> {
-    const url = 'http://localhost:4200/users/id?id=' + id;
+    const url = 'http://app:4200/users/id?id=' + id;
     return new Promise((resolve, reject) => {
       this.http.get<any>(url).subscribe(
         (response) => {
