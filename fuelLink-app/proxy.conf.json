@@ -1,6 +1,6 @@
 {
     "/api": {
-      "target": "http://localhost:8080",
+      "target": "grupo1-egs-deti.ua.pt/keycloak",
       "secure": false,
       "changeOrigin": true
     }

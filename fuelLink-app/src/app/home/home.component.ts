@@ -34,7 +34,7 @@ export class HomeComponent {
   }
 
   fetchVehicles() {
-    const url = 'http://app:4200/vehicle-info';
+    const url = 'http://grupo1-egs-deti.ua.pt/backend/vehicle-info';
     this.http.get<any>(url).subscribe(
       (response) => {
         this.vehicleList = response.data;
