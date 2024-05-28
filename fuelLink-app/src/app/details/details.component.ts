@@ -91,7 +91,8 @@ export class DetailsComponent {
           type: item.type,
           model: item.model,
           brand: item.brand,
-          color: item.color
+          color: item.color,
+          image: item.image
         }));
 
         console.log(this.vehicle);

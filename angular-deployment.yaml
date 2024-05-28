@@ -17,7 +17,7 @@ spec:
         io.kompose.service: composer-angular
     spec:
       containers:
-        - image: registry.deti/egs-fuellink/composer-angular
+        - image: registry.deti/egs-fuellink/composer-angular:latest
           imagePullPolicy: Always
           name: composer-angular
           ports:

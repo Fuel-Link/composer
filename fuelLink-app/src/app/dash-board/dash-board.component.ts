@@ -1,7 +1,9 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { CommonModule, NgFor } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import 'chartjs-adapter-date-fns';
+
 
 @Component({
   selector: 'app-dash-board',
@@ -79,7 +81,8 @@ export class DashBoardComponent implements OnInit{
   fuelHistory:{ liters:string, user_id:string, date:string, plate:string, gaspump_id:string, username:string}[]=[];
   user:{ user_id: string; username: string; role: string; hash: string}[]=[];
   pumpHistory:{ id:string, plate:string, thingId:string}[]=[];
-
+  pastData: any[] = [];
+  futureData: any[] = [];
   constructor(private http: HttpClient) { }
 
 
@@ -94,10 +97,29 @@ export class DashBoardComponent implements OnInit{
   }
 
   fetchPredictions() {
-    const url = 'http://localhost:5000/predict?bucket=bucketName&measurement=measurementName&field=fieldName';
-    this.http.get<any>(url).subscribe(
+    const orgName = 'Fuel-Link';
+    const authToken = '8b3913f589e0c1fd1781bee81820f695d54d6bb5';
+    const influxDBToken = 'iksE8XCfackxW6MDsxSiOeneEAhrSjvXkFOPpkGpZaTxhE0xhlaC-H1_6ikGJ7hK3kN7OmmdU8JFFNrG2my0Kg==';
+    const days = 7;
+  
+    const params = new HttpParams()
+      .set('org', orgName)
+      .set('authToken', authToken)
+      .set('token', influxDBToken)
+      .set('days', days.toString()); // Convert days to string as HttpParams expects strings
+  
+    const url = 'http://grupo1-egs-deti.ua.pt/market-analysis/predict';
+  
+    this.http.get<any>(url, { params }).subscribe(
       (response) => {
         this.predictions = response.predictions;
+        console.log(this.predictions);
+  
+        // Split the data into past and future datasets
+        const currentDate = new Date();
+        this.pastData = this.predictions.filter((d: any) => new Date(d.ds) < currentDate);
+        this.futureData = this.predictions.filter((d: any) => new Date(d.ds) >= currentDate);
+  
         this.createLineChart();
       },
       (error) => {
@@ -105,8 +127,8 @@ export class DashBoardComponent implements OnInit{
       }
     );
   }
-
-    
+  
+      
   fetchPump() {
     const url = 'http://grupo1-egs-deti.ua.pt/backend/kafka-communication';
     this.http.get<any>(url).subscribe(
@@ -159,10 +181,7 @@ export class DashBoardComponent implements OnInit{
       );
     });
   }
-  
-  
-  
-  
+
   createLineChart() {
     const labels = this.predictions.map(prediction => prediction.ds);
     const data = this.predictions.map(prediction => prediction.yhat);
