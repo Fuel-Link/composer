@@ -20,12 +20,6 @@ const EXCEL_EXTENSION = '.xlsx';
           <canvas id="donutChart"></canvas>
         </div>
         <div class="alerts">
-          <h3>Gas Pump Alerts</h3>
-          <br>
-          <div *ngFor="let alert of alerts2" class="alert" [ngStyle]="{'background-color': alert.color}">
-            {{ alert.message }}
-          </div>
-          <br>
           <div class="pump-table">
           <h3 class="heading" >Pump Movements History
             <button class="download-button" (click)="exportToExcel('pumpHistory')">Download Fuel History</button>
@@ -36,16 +30,12 @@ const EXCEL_EXTENSION = '.xlsx';
               <tr>
                 <th>Plate</th>
                 <th>Gas Pump</th>
-                <th>User</th>
-                <th>Authorization</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let elem of pumpHistory;">
                 <td>{{ elem.plate }}</td>
                 <td>{{ elem.thingId}}</td>
-                <td> Alice </td>
-                <td> Authorized </td>
               </tr>
             </tbody>
           </table>
@@ -126,24 +116,41 @@ export class GaspumDashComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
 
-  createDonutChart() {
-    const ctx = document.getElementById('donutChart') as HTMLCanvasElement;
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Stock', 'Gap'],
-        datasets: [{
-          label: 'Gas Pump Capacity',
-          data: [70, 30],
-          backgroundColor: [
-            'rgba(255, 140, 0, 0.85)', 
-            'rgba(0, 0, 0, 1)' 
-          ]
-        }]
-      }
-    });
-  }
+  async createDonutChart() {
+    try {
+        // Fetch the gas pump data from the backend
+        const response = await fetch('http://grupo1-egs-deti.ua.pt/backend/gas-pump');
+        const data = await response.json();
+        
+        if (!response.ok || !data.sucess) {
+            throw new Error('Failed to fetch gas pump data');
+        }
 
+        const gasPump = data.data[0];
+        const stock = gasPump.stock;
+        const capacity = gasPump.capacity;
+        const gap = capacity - stock;
+
+        const ctx = document.getElementById('donutChart') as HTMLCanvasElement;
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Stock', 'Gap'],
+                datasets: [{
+                    label: 'Gas Pump Capacity',
+                    data: [stock, gap],
+                    backgroundColor: [
+                        'rgba(255, 140, 0, 0.85)', // Stock color
+                        'rgba(0, 0, 0, 1)'         // Gap color
+                    ]
+                }]
+            }
+        });
+
+    } catch (error) {
+        console.error('Error creating donut chart:', error);
+    }
+}
   
 
     calculateAverageLiters(): number {

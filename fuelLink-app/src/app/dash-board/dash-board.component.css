@@ -54,7 +54,16 @@
   }
   
 
-
+  .warning-message {
+    background-color: #ffcc009d; /* Yellow background */
+    color: #b2222290; /* Dark red text */
+    padding: 20px;
+    border: 2px solid #b22222f9;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
   .pump-table {
     flex: 1;

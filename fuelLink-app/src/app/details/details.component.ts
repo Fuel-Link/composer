@@ -107,7 +107,7 @@ export class DetailsComponent {
   }
 
   loadMovements(plate: string){
-    this.http.get<any>('http:// grupo1-egs-deti.ua.pt/backend/fuel-movements/plate?plate='+ plate)
+    this.http.get<any>('http://grupo1-egs-deti.ua.pt/backend/fuel-movements/plate?plate='+ plate)
       .subscribe(
         (response) => {
           console.log("DATA", response);   

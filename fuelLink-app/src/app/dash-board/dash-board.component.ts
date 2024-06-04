@@ -17,60 +17,15 @@ import 'chartjs-adapter-date-fns';
     <canvas id="lineChart"></canvas>
     <br>
 
-    <div class="pump-table">
-      <h3>Pump Movements</h3>
-      <br>
-      <table>
-        <thead>
-          <tr>
-            <th>Plate</th>
-            <th>Gas Pump</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let elem of pumpHistory;">
-            <td>{{ elem.plate }}</td>
-            <td>{{ elem.thingId}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="fuel-table">
-      <h3>Last Fuel Consumptions</h3>
-      <br>
-      <table>
-        <thead>
-          <tr>
-            <th>Liters</th>
-            <th>User</th>
-            <th>Plate</th>
-            <th>Gas Pump</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let elem of fuelHistory;">
-            <td>{{ elem.liters }}</td>
-            <td>{{ elem.username}}</td>
-            <td>{{ elem.plate }}</td>
-            <td>{{ elem.gaspump_id }}</td>
-            <td>{{ elem.date }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 
-  <div class="chart-container left-chart">
-    <div class="chart-container top-chart">
-      <canvas id="barChart"></canvas>
-    </div>
+ <div class="chart-container left-chart">
+  <head>
+  <title>Decision</title>
 
-    <div class="chart-container bottom-chart">
-      <canvas id="donutChart"></canvas>
-    </div>
-  </div>
+  </head>
+ <h1 class="warning-message" >Considering the current fuel prices and future predictions, you should {{this.decision}} your order.</h1>
+  </div> 
 </div>
 `,
   styleUrls: ['./dash-board.component.css']
@@ -84,6 +39,7 @@ export class DashBoardComponent implements OnInit{
   pastData: any[] = [];
   futureData: any[] = [];
   constructor(private http: HttpClient) { }
+  decision:string = '';
 
 
   ngOnInit(): void {
@@ -113,7 +69,8 @@ export class DashBoardComponent implements OnInit{
     this.http.get<any>(url, { params }).subscribe(
       (response) => {
         this.predictions = response.predictions;
-        console.log(this.predictions);
+        this.decision = response.decision;
+        //console.log(this.predictions);
   
         // Split the data into past and future datasets
         const currentDate = new Date();
@@ -182,7 +139,77 @@ export class DashBoardComponent implements OnInit{
     });
   }
 
+
   createLineChart() {
+    const pastLabels = this.pastData.map(data => data.ds);
+    const pastData = this.pastData.map(data => data.yhat);
+  
+    const futureLabels = this.futureData.map(data => data.ds);
+    const futureData = this.futureData.map(data => data.yhat);
+  
+    // Combine past and future data
+    const combinedLabels = pastLabels.concat(futureLabels);
+    const combinedData = pastData.concat(futureData);
+  
+    // Check if labels and data lengths match
+    if (combinedLabels.length !== combinedData.length) {
+      console.error('Labels and data lengths do not match:', combinedLabels.length, combinedData.length);
+      return;
+    }
+  
+    const ctx = document.getElementById('lineChart') as HTMLCanvasElement;
+  
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: combinedLabels.map(label => new Date(label)),
+        datasets: [
+          {
+            label: 'Past Data',
+            data: pastData,
+            fill: false,
+            borderColor: 'blue',
+            tension: 0.1,
+            spanGaps: true
+          },
+          {
+            label: 'Future Predictions',
+            data: futureData,
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1,
+            spanGaps: true
+          }
+        ]
+      },
+      options: {
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              unit: 'day',
+              tooltipFormat: 'll',
+              displayFormats: {
+                day: 'MMM d'
+              }
+            },
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          },
+          y: {
+            beginAtZero: false,
+            title: {
+              display: true,
+              text: 'Value'
+            }
+          }
+        }
+      }
+    });
+  }
+  createLineChart1() {
     const labels = this.predictions.map(prediction => prediction.ds);
     const data = this.predictions.map(prediction => prediction.yhat);
 
